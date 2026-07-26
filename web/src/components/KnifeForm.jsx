@@ -35,13 +35,25 @@ function KnifeForm({ onSubmit, editingKnife, onCancel }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    const data = { name: form.name, price: parseInt(form.price) || 0 }
-    if (form.description) data.description = form.description
-    if (form.material) data.material = form.material
-    if (form.blade_length) data.blade_length = parseFloat(form.blade_length)
-    if (form.handle) data.handle = form.handle
-    if (form.brand) data.brand = form.brand
-    onSubmit(data)
+    if (editingKnife) {
+      const data = {}
+      if (form.name !== (editingKnife.name || '')) data.name = form.name
+      if (form.price !== String(editingKnife.price || '')) data.price = parseInt(form.price) || 0
+      if (form.description !== (editingKnife.description || '')) data.description = form.description || null
+      if (form.material !== (editingKnife.material || '')) data.material = form.material || null
+      if (form.blade_length !== String(editingKnife.blade_length || '')) data.blade_length = form.blade_length ? parseFloat(form.blade_length) : null
+      if (form.handle !== (editingKnife.handle || '')) data.handle = form.handle || null
+      if (form.brand !== (editingKnife.brand || '')) data.brand = form.brand || null
+      onSubmit(data)
+    } else {
+      const data = { name: form.name, price: parseInt(form.price) || 0 }
+      if (form.description) data.description = form.description
+      if (form.material) data.material = form.material
+      if (form.blade_length) data.blade_length = parseFloat(form.blade_length)
+      if (form.handle) data.handle = form.handle
+      if (form.brand) data.brand = form.brand
+      onSubmit(data)
+    }
     setForm(emptyForm)
   }
 
