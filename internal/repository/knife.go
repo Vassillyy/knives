@@ -8,6 +8,14 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+type KnifeRepositoryInterface interface {
+	GetAll(ctx context.Context) ([]models.Knife, error)
+	GetByID(ctx context.Context, id string) (*models.Knife, error)
+	Create(ctx context.Context, knife *models.Knife) error
+	Update(ctx context.Context, knife *models.Knife) error
+	Delete(ctx context.Context, id string) error
+}
+
 var knifeQueries = queries.MustLoad("knife.sql")
 
 type KnifeRepository struct {

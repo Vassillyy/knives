@@ -8,10 +8,10 @@ import (
 )
 
 type KnifeHandler struct {
-	service *service.KnifeService
+	service service.KnifeServiceInterface
 }
 
-func NewKnifeHandler(service *service.KnifeService) *KnifeHandler {
+func NewKnifeHandler(service service.KnifeServiceInterface) *KnifeHandler {
 	return &KnifeHandler{service: service}
 }
 
@@ -33,7 +33,7 @@ func (h *KnifeHandler) GetByID(c *fiber.Ctx) error {
 	if knife == nil {
 		return errorResponse(c, 404, "knife not found")
 	}
-	return c.Status(200).JSON(fiber.Map{"id": id, "data": knife})
+	return c.Status(200).JSON(fiber.Map{"success": true, "id": id, "data": knife})
 }
 
 func (h *KnifeHandler) Create(c *fiber.Ctx) error {

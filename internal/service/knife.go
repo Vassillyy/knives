@@ -6,11 +6,19 @@ import (
 	"knives/internal/repository"
 )
 
-type KnifeService struct {
-	repo *repository.KnifeRepository
+type KnifeServiceInterface interface {
+	GetAll(ctx context.Context) ([]models.Knife, error)
+	GetByID(ctx context.Context, id string) (*models.Knife, error)
+	Create(ctx context.Context, knife *models.Knife) error
+	Update(ctx context.Context, knife *models.Knife) error
+	Delete(ctx context.Context, id string) error
 }
 
-func NewKnifeService(repo *repository.KnifeRepository) *KnifeService {
+type KnifeService struct {
+	repo repository.KnifeRepositoryInterface
+}
+
+func NewKnifeService(repo repository.KnifeRepositoryInterface) *KnifeService {
 	return &KnifeService{repo: repo}
 }
 
