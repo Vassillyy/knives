@@ -23,14 +23,14 @@ func (s *KnifeService) GetByID(ctx context.Context, id string) (*models.Knife, e
 }
 
 func (s *KnifeService) Create(ctx context.Context, knife *models.Knife) error {
-	if err := validateKnife(knife); err != nil {
+	if err := validateKnifeCreate(knife); err != nil {
 		return err
 	}
 	return s.repo.Create(ctx, knife)
 }
 
 func (s *KnifeService) Update(ctx context.Context, knife *models.Knife) error {
-	if err := validateKnife(knife); err != nil {
+	if err := validateKnifeUpdate(knife); err != nil {
 		return err
 	}
 	return s.repo.Update(ctx, knife)

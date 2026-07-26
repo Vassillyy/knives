@@ -18,9 +18,9 @@ func NewKnifeHandler(service *service.KnifeService) *KnifeHandler {
 func (h *KnifeHandler) GetAll(c *fiber.Ctx) error {
 	knives, err := h.service.GetAll(c.Context())
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		return errorResponse(c, 500, err.Error())
 	}
-	return c.JSON(knives)
+	return successResponse(c, 200, knives)
 }
 
 func (h *KnifeHandler) GetByID(c *fiber.Ctx) error {
@@ -28,24 +28,24 @@ func (h *KnifeHandler) GetByID(c *fiber.Ctx) error {
 
 	knife, err := h.service.GetByID(c.Context(), id)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		return errorResponse(c, 500, err.Error())
 	}
 	if knife == nil {
-		return c.Status(404).JSON(fiber.Map{"error": "knife not found"})
+		return errorResponse(c, 404, "knife not found")
 	}
-	return c.JSON(knife)
+	return c.Status(200).JSON(fiber.Map{"id": id, "data": knife})
 }
 
 func (h *KnifeHandler) Create(c *fiber.Ctx) error {
 	knife := new(models.Knife)
 	if err := c.BodyParser(knife); err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": "invalid request body"})
+		return errorResponse(c, 400, "invalid request body")
 	}
 
 	if err := h.service.Create(c.Context(), knife); err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		return errorResponse(c, 500, err.Error())
 	}
-	return c.Status(201).JSON(knife)
+	return c.Status(201).JSON(fiber.Map{"success": true, "id": knife.ID, "data": knife})
 }
 
 func (h *KnifeHandler) Update(c *fiber.Ctx) error {
@@ -53,21 +53,21 @@ func (h *KnifeHandler) Update(c *fiber.Ctx) error {
 
 	knife := new(models.Knife)
 	if err := c.BodyParser(knife); err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": "invalid request body"})
+		return errorResponse(c, 400, "invalid request body")
 	}
 	knife.ID = id
 
 	if err := h.service.Update(c.Context(), knife); err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		return errorResponse(c, 500, err.Error())
 	}
-	return c.JSON(knife)
+	return c.Status(200).JSON(fiber.Map{"success": true, "id": id, "data": knife})
 }
 
 func (h *KnifeHandler) Delete(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	if err := h.service.Delete(c.Context(), id); err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		return errorResponse(c, 500, err.Error())
 	}
-	return c.Status(204).Send(nil)
+	return c.Status(200).JSON(fiber.Map{"success": true})
 }

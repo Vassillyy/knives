@@ -2,14 +2,16 @@ const API_URL = 'http://localhost:8080/api/v1/knives'
 
 export async function getAllKnives() {
   const res = await fetch(API_URL)
-  if (!res.ok) throw new Error('Ошибка загрузки ножей')
-  return res.json()
+  const json = await res.json()
+  if (!res.ok || !json.success) throw new Error(json.error || 'Ошибка загрузки ножей')
+  return json.data
 }
 
 export async function getKnifeById(id) {
   const res = await fetch(`${API_URL}/${id}`)
-  if (!res.ok) throw new Error('Нож не найден')
-  return res.json()
+  const json = await res.json()
+  if (!res.ok || !json.success) throw new Error(json.error || 'Нож не найден')
+  return json.data
 }
 
 export async function createKnife(knife) {
@@ -18,8 +20,9 @@ export async function createKnife(knife) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(knife)
   })
-  if (!res.ok) throw new Error('Ошибка создания ножа')
-  return res.json()
+  const json = await res.json()
+  if (!res.ok || !json.success) throw new Error(json.error || 'Ошибка создания ножа')
+  return json
 }
 
 export async function updateKnife(id, knife) {
@@ -28,13 +31,16 @@ export async function updateKnife(id, knife) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(knife)
   })
-  if (!res.ok) throw new Error('Ошибка обновления ножа')
-  return res.json()
+  const json = await res.json()
+  if (!res.ok || !json.success) throw new Error(json.error || 'Ошибка обновления ножа')
+  return json
 }
 
 export async function deleteKnife(id) {
   const res = await fetch(`${API_URL}/${id}`, {
     method: 'DELETE'
   })
-  if (!res.ok) throw new Error('Ошибка удаления ножа')
+  const json = await res.json()
+  if (!res.ok || !json.success) throw new Error(json.error || 'Ошибка удаления ножа')
+  return json
 }

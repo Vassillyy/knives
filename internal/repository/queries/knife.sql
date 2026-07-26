@@ -16,8 +16,16 @@ RETURNING id, created_at, updated_at;
 
 -- name: Update
 UPDATE knives
-SET name=$1, description=$2, price=$3, material=$4, blade_length=$5, handle=$6, brand=$7, updated_at=NOW()
-WHERE id=$8 AND deleted_at IS NULL;
+SET
+  name = COALESCE($1, name),
+  description = COALESCE($2, description),
+  price = COALESCE($3, price),
+  material = COALESCE($4, material),
+  blade_length = COALESCE($5, blade_length),
+  handle = COALESCE($6, handle),
+  brand = COALESCE($7, brand),
+  updated_at = NOW()
+WHERE id = $8 AND deleted_at IS NULL;
 
 -- name: Delete
 UPDATE knives
