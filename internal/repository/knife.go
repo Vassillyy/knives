@@ -28,7 +28,7 @@ func (r *KnifeRepository) GetAll(ctx context.Context) ([]models.Knife, error) {
 	var knives []models.Knife
 	for rows.Next() {
 		var k models.Knife
-		err := rows.Scan(k.ScanFields()...)
+		err := rows.Scan(knifeScanFields(&k)...)
 		if err != nil {
 			return nil, err
 		}
@@ -40,7 +40,7 @@ func (r *KnifeRepository) GetAll(ctx context.Context) ([]models.Knife, error) {
 func (r *KnifeRepository) GetByID(ctx context.Context, id string) (*models.Knife, error) {
 	var k models.Knife
 	err := r.db.QueryRow(ctx, knifeQueries.Get("GetByID"), id).
-		Scan(k.ScanFields()...)
+		Scan(knifeScanFields(&k)...)
 	if err != nil {
 		return nil, err
 	}
@@ -49,13 +49,13 @@ func (r *KnifeRepository) GetByID(ctx context.Context, id string) (*models.Knife
 
 func (r *KnifeRepository) Create(ctx context.Context, knife *models.Knife) error {
 	return r.db.QueryRow(ctx, knifeQueries.Get("Create"),
-		knife.CreateArgs()...).
+		knifeCreateArgs(knife)...).
 		Scan(&knife.ID, &knife.CreatedAt, &knife.UpdatedAt)
 }
 
 func (r *KnifeRepository) Update(ctx context.Context, knife *models.Knife) error {
 	_, err := r.db.Exec(ctx, knifeQueries.Get("Update"),
-		knife.UpdateArgs()...)
+		knifeUpdateArgs(knife)...)
 	return err
 }
 

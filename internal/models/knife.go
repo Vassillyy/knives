@@ -15,22 +15,3 @@ type Knife struct {
 	UpdatedAt   time.Time  `json:"updated_at"`
 	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
-
-func (k *Knife) ScanFields() []any {
-	return []any{
-		&k.ID, &k.Name, &k.Description, &k.Price, &k.Material,
-		&k.BladeLength, &k.Handle, &k.Brand, &k.CreatedAt, &k.UpdatedAt, &k.DeletedAt,
-	}
-}
-
-func (k *Knife) baseArgs() []any {
-	return []any{k.Name, k.Description, k.Price, k.Material, k.BladeLength, k.Handle, k.Brand}
-}
-
-func (k *Knife) CreateArgs() []any {
-	return k.baseArgs()
-}
-
-func (k *Knife) UpdateArgs() []any {
-	return append(k.baseArgs(), k.ID)
-}
