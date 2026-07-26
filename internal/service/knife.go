@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"knifes/internal/models"
-	"knifes/internal/repository"
+	"knives/internal/models"
+	"knives/internal/repository"
 )
 
 type KnifeService struct {
@@ -23,10 +23,16 @@ func (s *KnifeService) GetByID(ctx context.Context, id string) (*models.Knife, e
 }
 
 func (s *KnifeService) Create(ctx context.Context, knife *models.Knife) error {
+	if err := validateKnife(knife); err != nil {
+		return err
+	}
 	return s.repo.Create(ctx, knife)
 }
 
 func (s *KnifeService) Update(ctx context.Context, knife *models.Knife) error {
+	if err := validateKnife(knife); err != nil {
+		return err
+	}
 	return s.repo.Update(ctx, knife)
 }
 

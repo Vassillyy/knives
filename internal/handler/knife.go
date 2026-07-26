@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"knifes/internal/models"
-	"knifes/internal/service"
+	"knives/internal/models"
+	"knives/internal/service"
 
 	"github.com/gofiber/fiber/v2"
 )

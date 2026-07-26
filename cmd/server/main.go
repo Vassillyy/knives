@@ -7,10 +7,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"knifes/internal/config"
-	"knifes/internal/handler"
-	"knifes/internal/repository"
-	"knifes/internal/service"
+	"knives/internal/config"
+	"knives/internal/handler"
+	"knives/internal/repository"
+	"knives/internal/service"
 )
 
 func main() {

@@ -1,6 +1,6 @@
 package repository
 
-import "knifes/internal/models"
+import "knives/internal/models"
 
 func knifeScanFields(k *models.Knife) []any {
 	return []any{

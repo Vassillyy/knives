@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
-	"knifes/internal/models"
-	"knifes/internal/repository/queries"
+	"knives/internal/models"
+	"knives/internal/repository/queries"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
