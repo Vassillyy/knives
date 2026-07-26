@@ -13,7 +13,7 @@ CRUD-приложение для каталога ножей. Go (Fiber) + Postg
 ### 1. База данных
 
 ```sql
-CREATE DATABASE knifes;
+CREATE DATABASE knives;
 ```
 
 Таблица создаётся автоматически при первом запуске (или вручную):
@@ -62,21 +62,6 @@ npm run dev
 | POST | `/api/v1/knives` | Создать нож |
 | PATCH | `/api/v1/knives/:id` | Обновить нож |
 | DELETE | `/api/v1/knives/:id` | Удалить нож (мягкое) |
-
-## Структура проекта
-
-```
-knifes/
-├── cmd/server/main.go        # Точка входа
-├── internal/
-│   ├── config/               # Конфигурация
-│   ├── handler/              # HTTP-хендлеры
-│   ├── models/               # Модели данных
-│   ├── repository/           # Работа с БД
-│   │   └── queries/          # SQL-запросы
-│   └── service/              # Бизнес-логика
-└── web/                      # React-фронтенд
-```
 
 ## Стек
 
