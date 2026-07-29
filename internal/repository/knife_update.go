@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	apperrors "knives/internal/errors"
 	"knives/internal/models"
 )
 
@@ -19,8 +20,15 @@ SET
 WHERE id = $8 AND deleted_at IS NULL`
 
 func (r *KnifeRepository) Update(ctx context.Context, knife *models.Knife) error {
-	_, err := r.db.Exec(ctx, updateQuery,
+	result, err := r.db.Exec(ctx, updateQuery,
 		knife.Name, knife.Description, knife.Price, knife.Material,
 		knife.BladeLength, knife.Handle, knife.Brand, knife.ID)
-	return err
+	if err != nil {
+		return err
+	}
+	rowsAffected := result.RowsAffected()
+	if rowsAffected == 0 {
+		return apperrors.ErrNotFound
+	}
+	return nil
 }
