@@ -14,7 +14,7 @@ func (h *KnifeHandler) Delete(c *fiber.Ctx) error {
 		if errors.Is(err, apperrors.ErrNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"success": false, "error": "knife not found"})
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": err.Error()})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": "internal server error"})
 	}
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"success": true, "id": id})
 }

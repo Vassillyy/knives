@@ -2,4 +2,7 @@ package errors
 
 import "errors"
 
-var ErrNotFound = errors.New("resource not found")
+var (
+	ErrNotFound   = errors.New("resource not found")
+	ErrValidation = errors.New("validation error")
+)

@@ -7,7 +7,7 @@ func (h *KnifeHandler) GetByID(c *fiber.Ctx) error {
 
 	knife, err := h.service.GetByID(c.Context(), id)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": err.Error()})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": "internal server error"})
 	}
 	if knife == nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"success": false, "error": "knife not found"})

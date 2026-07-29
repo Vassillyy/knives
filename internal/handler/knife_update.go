@@ -17,11 +17,17 @@ func (h *KnifeHandler) Update(c *fiber.Ctx) error {
 	}
 	knife.ID = id
 
-	if err := h.service.Update(c.Context(), knife); err != nil {
+	updatedKnife, err := h.service.Update(c.Context(), knife)
+
+	if err != nil {
 		if errors.Is(err, apperrors.ErrNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"success": false, "error": "knife not found"})
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": err.Error()})
+		if errors.Is(err, apperrors.ErrValidation) {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "error": err.Error()})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": "internal server error"})
 	}
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"success": true, "id": id, "data": knife})
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"success": true, "data": updatedKnife})
 }

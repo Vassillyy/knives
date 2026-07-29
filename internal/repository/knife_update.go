@@ -2,8 +2,11 @@ package repository
 
 import (
 	"context"
+	"errors"
 	apperrors "knives/internal/errors"
 	"knives/internal/models"
+
+	"github.com/jackc/pgx/v5"
 )
 
 const updateQuery = `
@@ -17,18 +20,33 @@ SET
   handle = COALESCE($6, handle),
   brand = COALESCE($7, brand),
   updated_at = NOW()
-WHERE id = $8 AND deleted_at IS NULL`
+WHERE id = $8 AND deleted_at IS NULL
+RETURNING id, name, description, price, material, blade_length, handle, brand, created_at, updated_at`
 
-func (r *KnifeRepository) Update(ctx context.Context, knife *models.Knife) error {
-	result, err := r.db.Exec(ctx, updateQuery,
+func (r *KnifeRepository) Update(ctx context.Context, knife *models.Knife) (*models.Knife, error) {
+	var updated models.Knife
+	err := r.db.QueryRow(ctx, updateQuery,
 		knife.Name, knife.Description, knife.Price, knife.Material,
-		knife.BladeLength, knife.Handle, knife.Brand, knife.ID)
+		knife.BladeLength, knife.Handle, knife.Brand, knife.ID,
+	).Scan(
+		&updated.ID,
+		&updated.Name,
+		&updated.Description,
+		&updated.Price,
+		&updated.Material,
+		&updated.BladeLength,
+		&updated.Handle,
+		&updated.Brand,
+		&updated.CreatedAt,
+		&updated.UpdatedAt,
+	)
+
 	if err != nil {
-		return err
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, apperrors.ErrNotFound
+		}
+		return nil, err
 	}
-	rowsAffected := result.RowsAffected()
-	if rowsAffected == 0 {
-		return apperrors.ErrNotFound
-	}
-	return nil
+
+	return &updated, nil
 }
