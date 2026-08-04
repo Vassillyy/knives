@@ -12,10 +12,11 @@ type Config struct {
 	MinIOEndpoint  string
 	MinIOAccessKey string
 	MinIOSecretKey string
+	MinIOBucket    string
 }
 
 func Load() *Config {
-	godotenv.Load()
+	_ = godotenv.Load()
 
 	return &Config{
 		Port:           getEnv("PORT", "8080"),
@@ -23,6 +24,7 @@ func Load() *Config {
 		MinIOEndpoint:  getEnv("MINIO_ENDPOINT", "localhost:9000"),
 		MinIOAccessKey: getEnv("MINIO_ACCESS_KEY", "minioadmin"),
 		MinIOSecretKey: getEnv("MINIO_SECRET_KEY", "minioadmin"),
+		MinIOBucket:    getEnv("MINIO_BUCKET", "knife-photos"),
 	}
 }
 

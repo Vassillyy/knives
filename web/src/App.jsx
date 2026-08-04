@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import KnifeTable from './components/KnifeTable.jsx'
 import KnifeForm from './components/KnifeForm.jsx'
-import { getAllKnives, createKnife, updateKnife, deleteKnife } from './api.js'
+import { getAllKnives, getKnifeById, createKnife, updateKnife, deleteKnife } from './api.js'
 import './style.css'
 
 function App() {
@@ -47,9 +47,15 @@ function App() {
     }
   }
 
-  function handleEdit(knife) {
-    setEditingKnife(knife)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+  async function handleEdit(knife) {
+    try {
+      const fullKnife = await getKnifeById(knife.id)
+      setEditingKnife(fullKnife)
+      setError(null)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch (e) {
+      setError(e.message)
+    }
   }
 
   function handleCancel() {

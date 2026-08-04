@@ -1,9 +1,17 @@
 package handler
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"context"
+	"time"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func (h *KnifeHandler) GetAll(c *fiber.Ctx) error {
-	knives, err := h.service.GetAll(c.Context())
+	ctx, cancel := context.WithTimeout(c.Context(), 5*time.Second)
+	defer cancel()
+
+	knives, err := h.service.GetAll(ctx)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": err.Error()})
 	}

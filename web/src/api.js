@@ -44,3 +44,40 @@ export async function deleteKnife(id) {
   if (!res.ok || !json.success) throw new Error(json.error || 'Ошибка удаления ножа')
   return json
 }
+
+export function getPhotoUrl(knifeId, photoId) {
+  return `${API_URL}/${knifeId}/photos/${photoId}/file`
+}
+
+export async function getKnifePhotos(knifeId) {
+  const res = await fetch(`${API_URL}/${knifeId}/photos`)
+  const json = await res.json()
+  if (!res.ok || !json.success) throw new Error(json.error || 'Ошибка загрузки фотографий')
+  return json.data
+}
+
+export async function uploadKnifePhoto(knifeId, file) {
+  const formData = new FormData()
+  formData.append('file', file)
+  const res = await fetch(`${API_URL}/${knifeId}/photos`, {
+    method: 'POST',
+    body: formData
+  })
+  let json
+  try {
+    json = await res.json()
+  } catch {
+    throw new Error(`Ошибка загрузки фотографии (код ${res.status})`)
+  }
+  if (!res.ok || !json.success) throw new Error(json.error || 'Ошибка загрузки фотографии')
+  return json.data
+}
+
+export async function deleteKnifePhoto(knifeId, photoId) {
+  const res = await fetch(`${API_URL}/${knifeId}/photos/${photoId}`, {
+    method: 'DELETE'
+  })
+  const json = await res.json()
+  if (!res.ok || !json.success) throw new Error(json.error || 'Ошибка удаления фотографии')
+  return json
+}
