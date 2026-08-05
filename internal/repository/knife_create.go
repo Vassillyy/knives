@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"knives/internal/models"
+	"knives/internal/domain"
 )
 
 const createQuery = `
@@ -19,7 +19,7 @@ INSERT INTO knives (
 VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7)
 RETURNING id, created_at, updated_at`
 
-func (r *KnifeRepository) Create(ctx context.Context, knife *models.Knife) error {
+func (r *KnifeRepository) Create(ctx context.Context, knife *domain.Knife) error {
 	return r.db.QueryRow(ctx, createQuery,
 		knife.Name, knife.Description, knife.Price, knife.Material,
 		knife.BladeLength, knife.Handle, knife.Brand).

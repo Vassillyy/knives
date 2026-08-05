@@ -4,19 +4,19 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"knives/internal/models"
+	"knives/internal/domain"
 
 	"github.com/google/uuid"
 )
 
-func (s *KnifeService) UploadPhoto(ctx context.Context, knifeID, filename string, file io.Reader, size int64) (*models.KnifePhoto, error) {
+func (s *KnifeService) UploadPhoto(ctx context.Context, knifeID, filename string, file io.Reader, size int64) (*domain.KnifePhoto, error) {
 	key := fmt.Sprintf("%s/%s/%s", knifeID, uuid.NewString(), filename)
 
 	if err := s.s3Client.Put(ctx, key, file, size); err != nil {
 		return nil, err
 	}
 
-	photo := &models.KnifePhoto{
+	photo := &domain.KnifePhoto{
 		KnifeID:  knifeID,
 		S3Key:    key,
 		Filename: filename,

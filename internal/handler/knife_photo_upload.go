@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	apperrors "knives/internal/errors"
+	"knives/internal/handler/dto"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -30,5 +31,5 @@ func (h *KnifeHandler) UploadPhoto(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": apperrors.MsgInternalServerError})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"success": true, "data": photo})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"success": true, "data": dto.KnifePhotoFromDomain(photo)})
 }

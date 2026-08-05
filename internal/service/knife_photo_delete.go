@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
+	"knives/internal/domain"
 	apperrors "knives/internal/errors"
-	"knives/internal/models"
 )
 
 func (s *KnifeService) DeletePhoto(ctx context.Context, id string) error {
@@ -17,7 +17,7 @@ func (s *KnifeService) DeletePhoto(ctx context.Context, id string) error {
 	return s.deletePhoto(ctx, photo)
 }
 
-func (s *KnifeService) deletePhoto(ctx context.Context, photo *models.KnifePhoto) error {
+func (s *KnifeService) deletePhoto(ctx context.Context, photo *domain.KnifePhoto) error {
 	if err := s.s3Client.Remove(ctx, photo.S3Key); err != nil {
 		return err
 	}

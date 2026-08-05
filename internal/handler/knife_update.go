@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	apperrors "knives/internal/errors"
-	"knives/internal/models"
+	"knives/internal/handler/dto"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,10 +16,11 @@ func (h *KnifeHandler) Update(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 
-	knife := new(models.Knife)
-	if err := c.BodyParser(knife); err != nil {
+	var req dto.KnifeRequest
+	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "error": apperrors.MsgInvalidRequestBody})
 	}
+	knife := req.ToDomain()
 	knife.ID = id
 
 	updatedKnife, err := h.service.Update(ctx, knife)
@@ -34,5 +35,5 @@ func (h *KnifeHandler) Update(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": apperrors.MsgInternalServerError})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"success": true, "data": updatedKnife})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"success": true, "data": dto.KnifeFromDomain(updatedKnife)})
 }

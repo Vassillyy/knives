@@ -3,11 +3,11 @@ package service
 import (
 	"context"
 	"fmt"
+	"knives/internal/domain"
 	apperrors "knives/internal/errors"
-	"knives/internal/models"
 )
 
-func (s *KnifeService) Create(ctx context.Context, knife *models.Knife) error {
+func (s *KnifeService) Create(ctx context.Context, knife *domain.Knife) error {
 	if knife.Name == nil || *knife.Name == "" {
 		return fmt.Errorf("%w: name is required", apperrors.ErrValidation)
 	}

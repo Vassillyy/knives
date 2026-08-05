@@ -2,7 +2,8 @@ package repository
 
 import (
 	"context"
-	"knives/internal/models"
+
+	"knives/internal/domain"
 
 	"github.com/georgysavva/scany/v2/pgxscan"
 )
@@ -23,10 +24,10 @@ SELECT
 FROM knives
 WHERE deleted_at IS NULL`
 
-func (r *KnifeRepository) GetAll(ctx context.Context) ([]models.Knife, error) {
-	var knives []models.Knife
-	if err := pgxscan.Select(ctx, r.db, &knives, getAllQuery); err != nil {
+func (r *KnifeRepository) GetAll(ctx context.Context) ([]domain.Knife, error) {
+	var rows []knifeRow
+	if err := pgxscan.Select(ctx, r.db, &rows, getAllQuery); err != nil {
 		return nil, err
 	}
-	return knives, nil
+	return knifeRowsToDomain(rows), nil
 }

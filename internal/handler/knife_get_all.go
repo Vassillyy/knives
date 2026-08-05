@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"knives/internal/handler/dto"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -15,5 +16,5 @@ func (h *KnifeHandler) GetAll(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": err.Error()})
 	}
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"success": true, "data": knives})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"success": true, "data": dto.KnivesFromDomain(knives)})
 }

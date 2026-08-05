@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"errors"
+	"knives/internal/domain"
 	apperrors "knives/internal/errors"
-	"knives/internal/models"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -23,8 +23,8 @@ SET
 WHERE id = $8 AND deleted_at IS NULL
 RETURNING id, name, description, price, material, blade_length, handle, brand, created_at, updated_at`
 
-func (r *KnifeRepository) Update(ctx context.Context, knife *models.Knife) (*models.Knife, error) {
-	var updated models.Knife
+func (r *KnifeRepository) Update(ctx context.Context, knife *domain.Knife) (*domain.Knife, error) {
+	var updated domain.Knife
 	err := r.db.QueryRow(ctx, updateQuery,
 		knife.Name, knife.Description, knife.Price, knife.Material,
 		knife.BladeLength, knife.Handle, knife.Brand, knife.ID,
