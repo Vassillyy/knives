@@ -7,7 +7,7 @@ import (
 
 	"knives/internal/config"
 	"knives/internal/handler"
-	"knives/internal/repository"
+	"knives/internal/repository/postgres"
 	"knives/internal/service"
 
 	"github.com/gofiber/fiber/v2"
@@ -40,8 +40,8 @@ func main() {
 		}
 	}
 
-	repo := repository.NewKnifeRepository(pool)
-	photoRepo := repository.NewKnifePhotoRepository(pool)
+	repo := postgres.NewKnifeRepository(pool)
+	photoRepo := postgres.NewKnifePhotoRepository(pool)
 	svc := service.NewKnifeService(repo, photoRepo, s3Client)
 	h := handler.NewKnifeHandler(svc)
 

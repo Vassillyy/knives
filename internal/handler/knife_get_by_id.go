@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 	apperrors "knives/internal/errors"
 	"knives/internal/handler/dto"
 	"time"
@@ -17,10 +18,10 @@ func (h *KnifeHandler) GetByID(c *fiber.Ctx) error {
 
 	knife, err := h.service.GetByID(ctx, id)
 	if err != nil {
+		if errors.Is(err, apperrors.ErrNotFound) {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"success": false, "error": apperrors.MsgKnifeNotFound})
+		}
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": apperrors.MsgInternalServerError})
-	}
-	if knife == nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"success": false, "error": apperrors.MsgKnifeNotFound})
 	}
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"success": true, "data": dto.KnifeFromDomain(knife)})
 }

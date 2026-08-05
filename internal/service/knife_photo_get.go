@@ -4,16 +4,12 @@ import (
 	"context"
 	"io"
 	"knives/internal/domain"
-	apperrors "knives/internal/errors"
 )
 
 func (s *KnifeService) GetPhoto(ctx context.Context, id string) (io.ReadCloser, *domain.KnifePhoto, error) {
 	photo, err := s.photoRepo.GetByID(ctx, id)
 	if err != nil {
 		return nil, nil, err
-	}
-	if photo == nil {
-		return nil, nil, apperrors.ErrNotFound
 	}
 
 	obj, err := s.s3Client.Get(ctx, photo.S3Key)
