@@ -12,7 +12,7 @@ import (
 func (s *KnifeService) UploadPhoto(ctx context.Context, knifeID, filename string, file io.Reader, size int64) (*domain.KnifePhoto, error) {
 	key := fmt.Sprintf("%s/%s/%s", knifeID, uuid.NewString(), filename)
 
-	if err := s.s3Client.Put(ctx, key, file, size); err != nil {
+	if err := s.storage.Put(ctx, key, file, size); err != nil {
 		return nil, err
 	}
 

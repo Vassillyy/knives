@@ -12,7 +12,7 @@ func (s *KnifeService) GetPhoto(ctx context.Context, id string) (io.ReadCloser, 
 		return nil, nil, err
 	}
 
-	obj, err := s.s3Client.Get(ctx, photo.S3Key)
+	obj, err := s.storage.Get(ctx, photo.S3Key)
 	if err != nil {
 		return nil, nil, err
 	}

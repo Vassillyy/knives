@@ -14,7 +14,7 @@ func (s *KnifeService) DeletePhoto(ctx context.Context, id string) error {
 }
 
 func (s *KnifeService) deletePhoto(ctx context.Context, photo *domain.KnifePhoto) error {
-	if err := s.s3Client.Remove(ctx, photo.S3Key); err != nil {
+	if err := s.storage.Remove(ctx, photo.S3Key); err != nil {
 		return err
 	}
 	return s.photoRepo.Delete(ctx, photo.ID)

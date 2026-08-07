@@ -2,18 +2,18 @@ package main
 
 import (
 	"context"
-	"knives/internal/s3"
 	"log"
 
 	"knives/internal/config"
 	"knives/internal/handler"
 	"knives/internal/repository/postgres"
 	"knives/internal/service"
+	"knives/internal/storage/minio"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/minio/minio-go/v7"
+	miniogo "github.com/minio/minio-go/v7"
 )
 
 func main() {
@@ -25,24 +25,24 @@ func main() {
 	}
 	defer pool.Close()
 
-	s3Client, err := s3.New(cfg.MinIOEndpoint, cfg.MinIOAccessKey, cfg.MinIOSecretKey, cfg.MinIOBucket)
+	storageClient, err := minio.New(cfg.MinIOEndpoint, cfg.MinIOAccessKey, cfg.MinIOSecretKey, cfg.MinIOBucket)
 	if err != nil {
 		log.Fatal("failed to connect to minio: ", err)
 	}
 
-	bucketExists, err := s3Client.BucketExists(context.Background(), cfg.MinIOBucket)
+	bucketExists, err := storageClient.BucketExists(context.Background(), cfg.MinIOBucket)
 	if err != nil {
 		log.Fatal("failed to check minio bucket: ", err)
 	}
 	if !bucketExists {
-		if err := s3Client.MakeBucket(context.Background(), cfg.MinIOBucket, minio.MakeBucketOptions{}); err != nil {
+		if err := storageClient.MakeBucket(context.Background(), cfg.MinIOBucket, miniogo.MakeBucketOptions{}); err != nil {
 			log.Fatal("failed to create minio bucket: ", err)
 		}
 	}
 
 	repo := postgres.NewKnifeRepository(pool)
 	photoRepo := postgres.NewKnifePhotoRepository(pool)
-	svc := service.NewKnifeService(repo, photoRepo, s3Client)
+	svc := service.NewKnifeService(repo, photoRepo, storageClient)
 	h := handler.NewKnifeHandler(svc)
 
 	app := fiber.New(fiber.Config{

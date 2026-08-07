@@ -5,7 +5,7 @@ import (
 	"io"
 	"knives/internal/domain"
 	"knives/internal/repository"
-	"knives/internal/s3"
+	"knives/internal/storage"
 )
 
 type KnifeServiceInterface interface {
@@ -23,9 +23,9 @@ type KnifeServiceInterface interface {
 type KnifeService struct {
 	repo      repository.KnifeRepositoryInterface
 	photoRepo repository.KnifePhotoRepositoryInterface
-	s3Client  s3.StorageInterface
+	storage   storage.Interface
 }
 
-func NewKnifeService(repo repository.KnifeRepositoryInterface, photoRepo repository.KnifePhotoRepositoryInterface, s3Client s3.StorageInterface) *KnifeService {
-	return &KnifeService{repo: repo, photoRepo: photoRepo, s3Client: s3Client}
+func NewKnifeService(repo repository.KnifeRepositoryInterface, photoRepo repository.KnifePhotoRepositoryInterface, storage storage.Interface) *KnifeService {
+	return &KnifeService{repo: repo, photoRepo: photoRepo, storage: storage}
 }
